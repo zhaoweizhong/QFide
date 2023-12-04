@@ -47,7 +47,7 @@ def teleport(
 
     # Loss Gate
     if loss_model:
-        circuit.append(loss_model(), [0, 1])
+        circuit.append(loss_model, [0, 1])
 
     if not no_measure:
         circuit.measure([0, 1], [0, 1])
@@ -60,7 +60,7 @@ def teleport(
 
     # Loss Gate
     if loss_model:
-        circuit.append(loss_model(), [0, 2])
+        circuit.append(loss_model, [0, 2])
 
     # Result Measurement
     if not no_measure:
