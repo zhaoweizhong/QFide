@@ -7,7 +7,17 @@ from qfide.plot.fidelity import plot_fidelity
 from qfide.plot.tomography import plot_tomography
 
 
-def run_sim(noise_model: NoiseModel, loss_model: Operator, runs=1000, draw_circuit_first=False, mpl_output=True, fidelity_plot=False, tomography_plot=False) -> List[float]:
+def run_sim(
+    noise_model: NoiseModel,
+    loss_model: Operator,
+    runs=1000,
+    draw_circuit_first=False,
+    mpl_output=True,
+    fidelity_plot=False,
+    tomography_plot=False,
+    save_figure=False,
+    save_dir="figures",
+) -> List[float]:
     """
     Run the simulation and return the fidelity of the results.
 
@@ -27,6 +37,10 @@ def run_sim(noise_model: NoiseModel, loss_model: Operator, runs=1000, draw_circu
         Whether to plot the fidelity.
     tomography_plot : bool
         Whether to plot the tomography.
+    save_figure : bool
+        Whether to save the figure.
+    save_dir : str
+        The directory to save the figure.
 
     Returns
     -------
@@ -42,7 +56,15 @@ def run_sim(noise_model: NoiseModel, loss_model: Operator, runs=1000, draw_circu
     f_11 = 0
     count_11 = 0
     for run in range(runs):
-        teleport_result = teleport(noise_model=noise_model, loss_model=loss_model, draw_circuit=(draw_circuit_first and run == 0), mpl_output=mpl_output, shots=1000)
+        teleport_result = teleport(
+            noise_model=noise_model,
+            loss_model=loss_model,
+            draw_circuit=(draw_circuit_first and run == 0),
+            mpl_output=mpl_output,
+            shots=1000,
+            save_figure=save_figure,
+            save_dir=save_dir,
+        )
         counts = {k: v for k, v in sorted(teleport_result.items())}
         res = fidelity_calc(counts)
         if res[0] != 0:
@@ -67,9 +89,9 @@ def run_sim(noise_model: NoiseModel, loss_model: Operator, runs=1000, draw_circu
     y = [f_00, f_01, f_10, f_11]
 
     if fidelity_plot:
-        plot_fidelity(x, y)
+        plot_fidelity(x, y, save_figure=save_figure, save_dir=save_dir)
     if tomography_plot:
-        circuit = teleport(noise_model=noise_model, loss_model=loss_model, draw_circuit=False, shots=1000, no_measure=True)
-        plot_tomography(circuit)
+        circuit = teleport(noise_model=noise_model, loss_model=loss_model, draw_circuit=False, shots=1000, no_measure=True, save_figure=False)
+        plot_tomography(circuit, save_figure=save_figure, save_dir=save_dir)
 
     return y

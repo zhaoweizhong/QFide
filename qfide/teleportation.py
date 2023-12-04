@@ -1,4 +1,3 @@
-from typing import Tuple
 from qiskit import Aer, QuantumCircuit, execute
 from qiskit.providers.aer.noise import NoiseModel
 from qiskit.quantum_info import Operator
@@ -6,7 +5,7 @@ import matplotlib.pyplot as plt
 
 
 def teleport(
-    noise_model: NoiseModel, loss_model: Operator, draw_circuit=False, mpl_output=True, shots=1000, no_measure=False
+    noise_model: NoiseModel, loss_model: Operator, draw_circuit=False, mpl_output=True, shots=1000, no_measure=False, save_figure=False, save_dir="figures"
 ) -> QuantumCircuit or (dict[str, int] or list[dict[str, int]]):
     """
     Run the teleportation circuit and return the result.
@@ -25,6 +24,10 @@ def teleport(
         The number of shots to be simulated.
     no_measure : bool
         Whether to return the circuit without measurement.
+    save_figure : bool
+        Whether to save the figure.
+    save_dir : str
+        The directory to save the figure.
 
     Returns
     -------
@@ -69,7 +72,11 @@ def teleport(
     if draw_circuit:
         if mpl_output:
             circuit.draw(reverse_bits=True, output="mpl", style="clifford")
-            plt.show()
+            if save_figure:
+                plt.savefig(f"{save_dir}/circuit.svg", format="svg")
+            else:
+                plt.show()
+            plt.close()
         else:
             print(circuit.draw(reverse_bits=True))
 
