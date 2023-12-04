@@ -7,9 +7,10 @@ from qfide.error.loss_model import loss_model
 
 
 def run(noise_model, loss_model, runs, save_dir):
+    start_time = time.time()
+    print(f"{time.ctime(start_time)}: Running {save_dir}...")
     directory = os.path.join(os.getcwd(), save_dir)
     os.makedirs(directory, exist_ok=True)
-    start_time = time.time()
     with open(f"{save_dir}/time.txt", "w") as f:
         f.write(f"Start time: {time.ctime(start_time)}\n")
     counts = run_sim(
@@ -29,6 +30,7 @@ def run(noise_model, loss_model, runs, save_dir):
     with open(f"{save_dir}/time.txt", "a") as f:
         f.write(f"End time: {time.ctime(end_time)}\n")
         f.write(f"Execution time: {end_time - start_time} seconds\n")
+    print(f"{time.ctime(end_time)}: Finished {save_dir}, execution time: {end_time - start_time} seconds")
 
 
 run(noise_model=None, loss_model=None, runs=100000, save_dir="results/noise_none-loss_none-runs_100000")
