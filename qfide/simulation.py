@@ -5,6 +5,7 @@ from qfide.teleportation import teleport
 from qfide.fidelity import fidelity_calc
 from qfide.plot.fidelity import plot_fidelity
 from qfide.plot.tomography import plot_tomography
+from qfide.plot.bloch import plot_bloch
 
 
 def run_sim(
@@ -15,6 +16,7 @@ def run_sim(
     mpl_output=True,
     fidelity_plot=False,
     tomography_plot=False,
+    bloch_plot=False,
     save_figure=False,
     save_dir="figures",
 ) -> List[float]:
@@ -82,5 +84,8 @@ def run_sim(
     if tomography_plot:
         circuit = teleport(noise_model=noise_model, loss_model=loss_model, draw_circuit=False, shots=1000, no_measure=True, save_figure=False)
         plot_tomography(circuit, save_figure=save_figure, save_dir=save_dir)
+    if bloch_plot:
+        circuit = teleport(noise_model=noise_model, loss_model=loss_model, draw_circuit=False, shots=1000, no_measure=True, save_figure=False)
+        plot_bloch(circuit, save_figure=save_figure, save_dir=save_dir)
 
     return y
