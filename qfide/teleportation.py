@@ -1,11 +1,12 @@
 from qiskit import Aer, QuantumCircuit, execute
 from qiskit.providers.aer.noise import NoiseModel
 from qiskit.quantum_info import Operator
+from qiskit.extensions import Initialize
 import matplotlib.pyplot as plt
 
 
 def teleport(
-    noise_model: NoiseModel, loss_model: Operator, draw_circuit=False, mpl_output=True, shots=1000, no_measure=False, save_figure=False, save_dir="figures"
+    noise_model: NoiseModel, loss_model: Operator, init_psi=[1, 0], draw_circuit=False, mpl_output=True, shots=1000, no_measure=False, save_figure=False, save_dir="figures"
 ) -> QuantumCircuit or (dict[str, int] or list[dict[str, int]]):
     """
     Run the teleportation circuit and return the result.
@@ -35,6 +36,11 @@ def teleport(
         The circuit if no_measure is True, otherwise the result.
     """
     circuit = QuantumCircuit(3, 3)
+
+    # Prepare the initial state to be teleported
+    init_gate = Initialize(init_psi)
+    circuit.append(init_gate, [0])
+    circuit.barrier()  # Just a visual divider on graph
 
     # C prepares a Bell-pair
     circuit.h(1)
