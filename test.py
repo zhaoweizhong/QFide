@@ -21,6 +21,7 @@ def run(noise_model, loss_model, runs, save_dir):
         mpl_output=True,
         fidelity_plot=True,
         tomography_plot=True,
+        bloch_plot=True,
         save_figure=True,
         save_dir=save_dir,
     )
@@ -32,6 +33,8 @@ def run(noise_model, loss_model, runs, save_dir):
         f.write(f"Execution time: {end_time - start_time} seconds\n")
     print(f"{time.ctime(end_time)}: Finished {save_dir}, execution time: {end_time - start_time} seconds")
 
+
+# run(noise_model=None, loss_model=loss_model(), runs=1000, save_dir="results/noise_none-loss_none-runs_1000")
 
 run(noise_model=None, loss_model=None, runs=100000, save_dir="results/noise_none-loss_none-runs_100000")
 run(noise_model=None, loss_model=loss_model(), runs=100000, save_dir="results/noise_none-loss_true-runs_100000")

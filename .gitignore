@@ -27,4 +27,4 @@ ENV/
 .DS_Store
 
 figures/
-results/
+results*/
