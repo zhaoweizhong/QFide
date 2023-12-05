@@ -47,14 +47,10 @@ def run_sim(
     List[float]
         The list of fidelity of the results.
     """
-    f_00 = 0
-    count_00 = 0
-    f_01 = 0
-    count_01 = 0
-    f_10 = 0
-    count_10 = 0
-    f_11 = 0
-    count_11 = 0
+    f_00 = []
+    f_01 = []
+    f_10 = []
+    f_11 = []
     for run in range(runs):
         teleport_result = teleport(
             noise_model=noise_model,
@@ -68,28 +64,21 @@ def run_sim(
         counts = {k: v for k, v in sorted(teleport_result.items())}
         res = fidelity_calc(counts)
         if res[0] != 0:
-            f_00 += res[0]
-            count_00 += 1
+            f_00.append(res[0])
         if res[1] != 0:
-            f_01 += res[1]
-            count_01 += 1
+            f_01.append(res[1])
         if res[2] != 0:
-            f_10 += res[2]
-            count_10 += 1
+            f_10.append(res[2])
         if res[3] != 0:
-            f_11 += res[3]
-            count_11 += 1
-
-    f_00 = f_00 / count_00
-    f_01 = f_01 / count_01
-    f_10 = f_10 / count_10
-    f_11 = f_11 / count_11
+            f_11.append(res[3])
 
     x = ["00", "01", "10", "11"]
-    y = [f_00, f_01, f_10, f_11]
+    y = [sum(f_00) / len(f_00), sum(f_01) / len(f_01), sum(f_10) / len(f_10), sum(f_11) / len(f_11)]
+    y_max = [max(f_00), max(f_01), max(f_10), max(f_11)]
+    y_min = [min(f_00), min(f_01), min(f_10), min(f_11)]
 
     if fidelity_plot:
-        plot_fidelity(x, y, save_figure=save_figure, save_dir=save_dir)
+        plot_fidelity(x, y, y_max, y_min, save_figure=save_figure, save_dir=save_dir)
     if tomography_plot:
         circuit = teleport(noise_model=noise_model, loss_model=loss_model, draw_circuit=False, shots=1000, no_measure=True, save_figure=False)
         plot_tomography(circuit, save_figure=save_figure, save_dir=save_dir)
